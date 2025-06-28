@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { apiUtils, API_ENDPOINTS } from '@/utils/api';
 
 const YT_API_KEY = "AIzaSyCOM4hcoVvd4I5DVDY6JrOg6z5hWMh8QDc";
 const YT_QUERY = "fun science experiments for kids";
@@ -51,12 +52,13 @@ export default function ScienceChatPage() {
     setFilePreview(null);
     setLoading(true);
     try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      if (!apiUtils.isGroqApiKeyAvailable()) {
+        throw new Error('API key not configured');
+      }
+
+      const res = await fetch(API_ENDPOINTS.GROQ_CHAT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_GROQ_API_KEY}`
-        },
+        headers: apiUtils.getGroqHeaders(),
         body: JSON.stringify({
           model: "llama3-8b-8192",
           messages: [
