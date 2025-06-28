@@ -51,7 +51,7 @@ kidai/
     └── package.json       # Node.js dependencies
 ```
 
-## � Security Notes
+## 🛠️ Security Notes
 
 **Important**: Before deploying to production or pushing to a public repository:
 
@@ -61,7 +61,7 @@ kidai/
 4. **Database**: Use a production database (PostgreSQL/MySQL) instead of SQLite.
 5. **CORS**: Configure CORS_ALLOWED_ORIGINS properly for your production domain.
 
-## �🚀 Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -148,8 +148,7 @@ The frontend application will be available at `http://localhost:3000`
    Add these environment variables in Vercel dashboard:
    ```
    NEXT_PUBLIC_GROQ_API_KEY=your_actual_groq_api_key
-   NEXT_PUBLIC_API_BASE_URL=https://your-backend-url.com
-   NODE_ENV=production
+   NEXT_PUBLIC_BACKEND_URL=https://your-backend-url.com
    ```
 
 3. **Build Settings:**
@@ -159,37 +158,45 @@ The frontend application will be available at `http://localhost:3000`
 
 ### **Backend Deployment Options**
 
-#### **Option 1: Railway**
-1. Connect your GitHub repository to Railway
-2. Set environment variables in Railway dashboard
-3. Use the provided railway.app URL as your backend URL
+#### **Option 1: Railway (Recommended)**
+1. Go to [railway.app](https://railway.app)
+2. Connect your GitHub repository
+3. Select the `backend` folder as source directory
+4. Add environment variables:
+   ```
+   SECRET_KEY=your-secure-django-secret-key
+   DEBUG=False
+   ALLOWED_HOSTS=your-railway-domain.railway.app
+   CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
+   ```
 
 #### **Option 2: Heroku**
 1. Create a new Heroku app
-2. Set buildpack to Python
-3. Configure environment variables in Heroku settings
+2. Add PostgreSQL addon
+3. Set environment variables in Heroku settings
+4. Deploy using Git subtree
 
 #### **Option 3: DigitalOcean App Platform**
 1. Create a new app from GitHub
-2. Configure environment variables
-3. Set up auto-deploy from main branch
+2. Select `backend` as source directory
+3. Configure environment variables
+4. Set build command: `pip install -r requirements.txt`
+5. Set run command: `gunicorn kidai_backend.wsgi:application`
 
 ### **Environment Variables for Production**
 
-**Backend (.env):**
+**Frontend (Vercel):**
+```
+NEXT_PUBLIC_GROQ_API_KEY=your_groq_api_key
+NEXT_PUBLIC_BACKEND_URL=https://your-backend.railway.app
+```
+
+**Backend:**
 ```
 SECRET_KEY=your_production_secret_key
 DEBUG=False
-ALLOWED_HOSTS=your-domain.com,your-vercel-app.vercel.app
-DATABASE_URL=your_production_database_url
+ALLOWED_HOSTS=your-domain.com
 CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
-```
-
-**Frontend (.env.local):**
-```
-NEXT_PUBLIC_GROQ_API_KEY=your_groq_api_key
-NEXT_PUBLIC_API_BASE_URL=https://your-backend-url.com
-NODE_ENV=production
 ```
 
 ## 🛠️ **Troubleshooting**

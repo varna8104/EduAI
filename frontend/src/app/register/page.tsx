@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
+import backendApiUtils from "@/utils/backend-api";
 
 export default function RegisterPage() {
   const [childName, setChildName] = useState("");
@@ -77,22 +78,17 @@ export default function RegisterPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch("http://localhost:8000/api/register/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          child_name: childName,
-          child_gender: childGender,
-          child_dob: childDob,
-          child_group: childGroup,
-          parent_name: parentName,
-          parent_dob: parentDob,
-          parent_mobile: parentMobile,
-          password,
-        }),
+      const data = await backendApiUtils.register({
+        child_name: childName,
+        child_dob: childDob,
+        child_group: childGroup,
+        parent_name: parentName,
+        parent_dob: parentDob,
+        parent_mobile: parentMobile,
+        password,
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      
+      if (data.success) {
         setSubmitting(false);
         // Save children and parentName to localStorage (simulate one child just registered)
         if (typeof window !== 'undefined') {
@@ -102,15 +98,16 @@ export default function RegisterPage() {
         router.push("/profiles");
       } else {
         setSubmitting(false);
-        if (data.error && data.error.toLowerCase().includes('already')) {
-          setFormError('Account already exists. Please log in.');
-        } else {
-          setFormError(data.error || "Registration failed. Please try again.");
-        }
+        setFormError(data.error || "Registration failed. Please try again.");
       }
-    } catch (err) {
+    } catch (err: any) {
       setSubmitting(false);
-      setFormError("Could not connect to server. Please try again later.");
+      const errorMessage = backendApiUtils.handleBackendError(err);
+      if (errorMessage.toLowerCase().includes('already')) {
+        setFormError('Account already exists. Please log in.');
+      } else {
+        setFormError(errorMessage);
+      }
     }
   };
 

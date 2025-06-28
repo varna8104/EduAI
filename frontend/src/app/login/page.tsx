@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
+import backendApiUtils from "@/utils/backend-api";
 
 export default function LoginPage() {
   const [parentMobile, setParentMobile] = useState("");
@@ -19,16 +20,12 @@ export default function LoginPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch("http://localhost:8000/api/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          parent_mobile: parentMobile,
-          password,
-        }),
+      const data = await backendApiUtils.login({
+        parent_mobile: parentMobile,
+        password,
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      
+      if (data.success) {
         setSubmitting(false);
         // Save children and parentName to localStorage
         if (typeof window !== 'undefined') {
@@ -40,9 +37,10 @@ export default function LoginPage() {
         setSubmitting(false);
         setFormError(data.error || "Login failed. Please try again.");
       }
-    } catch (err) {
+    } catch (err: any) {
       setSubmitting(false);
-      setFormError("Could not connect to server. Please try again later.");
+      const errorMessage = backendApiUtils.handleBackendError(err);
+      setFormError(errorMessage);
     }
   };
 

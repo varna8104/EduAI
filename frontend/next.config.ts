@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   // Handle environment variables
   env: {
     NEXT_PUBLIC_GROQ_API_KEY: process.env.NEXT_PUBLIC_GROQ_API_KEY,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
   },
 
   // Remove API rewrites for direct Vercel deployment
