@@ -1,11 +1,9 @@
 // API configuration and utilities
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 const GROQ_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY;
 
 // API endpoints
 export const API_ENDPOINTS = {
   GROQ_CHAT: 'https://api.groq.com/openai/v1/chat/completions',
-  BACKEND_BASE: API_BASE_URL,
 };
 
 // API utilities
