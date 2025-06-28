@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
-import backendApiUtils from "@/utils/backend-api";
+import apiUtils from "@/utils/api";
 
 export default function LoginPage() {
   const [parentMobile, setParentMobile] = useState("");
@@ -20,7 +20,7 @@ export default function LoginPage() {
     }
     setSubmitting(true);
     try {
-      const data = await backendApiUtils.login({
+      const data = await apiUtils.login({
         parent_mobile: parentMobile,
         password,
       });
@@ -39,7 +39,7 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       setSubmitting(false);
-      const errorMessage = backendApiUtils.handleBackendError(err);
+      const errorMessage = apiUtils.handleApiError(err);
       setFormError(errorMessage);
     }
   };

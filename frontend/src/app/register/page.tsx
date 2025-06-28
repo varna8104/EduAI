@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
-import backendApiUtils from "@/utils/backend-api";
+import apiUtils from "@/utils/api";
 
 export default function RegisterPage() {
   const [childName, setChildName] = useState("");
@@ -78,7 +78,7 @@ export default function RegisterPage() {
     }
     setSubmitting(true);
     try {
-      const data = await backendApiUtils.register({
+      const data = await apiUtils.register({
         child_name: childName,
         child_dob: childDob,
         child_group: childGroup,
@@ -102,7 +102,7 @@ export default function RegisterPage() {
       }
     } catch (err: any) {
       setSubmitting(false);
-      const errorMessage = backendApiUtils.handleBackendError(err);
+      const errorMessage = apiUtils.handleApiError(err);
       if (errorMessage.toLowerCase().includes('already')) {
         setFormError('Account already exists. Please log in.');
       } else {
