@@ -10,16 +10,24 @@ const nextConfig: NextConfig = {
   
   // Handle environment variables
   env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 
+                             (process.env.NODE_ENV === 'production' 
+                               ? 'https://your-backend-domain.herokuapp.com'  // Replace with your actual backend URL
+                               : 'http://localhost:8000'),
     NEXT_PUBLIC_GROQ_API_KEY: process.env.NEXT_PUBLIC_GROQ_API_KEY,
   },
 
   // Rewrites for API calls
   async rewrites() {
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 
+                      (process.env.NODE_ENV === 'production' 
+                        ? 'https://your-backend-domain.herokuapp.com'  // Replace with your actual backend URL
+                        : 'http://localhost:8000');
+    
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api/:path*`,
+        destination: `${apiBaseUrl}/api/:path*`,
       },
     ];
   },

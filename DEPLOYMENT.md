@@ -12,13 +12,42 @@
 3. **Set Environment Variables in Vercel:**
    ```
    NEXT_PUBLIC_GROQ_API_KEY=your_actual_groq_api_key_here
-   NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+   NEXT_PUBLIC_API_BASE_URL=https://your-backend-domain.herokuapp.com
    NODE_ENV=production
    ```
 
 4. **Deploy!** 
    - Click "Deploy" and wait for build to complete
    - Your app will be live at: `https://your-app-name.vercel.app`
+
+## 🗄️ Deploy Backend First
+
+### Option 1: Railway (Recommended)
+1. Go to [railway.app](https://railway.app) and connect GitHub
+2. Deploy your `backend` folder
+3. Add environment variables in Railway dashboard
+4. Get your Railway URL: `https://your-app-name.up.railway.app`
+
+### Option 2: Heroku
+1. Create Heroku account and install Heroku CLI
+2. Run: `heroku create your-backend-name`
+3. Set buildpack: `heroku buildpacks:set heroku/python`
+4. Deploy: `git subtree push --prefix backend heroku main`
+5. Get your Heroku URL: `https://your-backend-name.herokuapp.com`
+
+### Option 3: DigitalOcean
+1. Go to DigitalOcean App Platform
+2. Connect your GitHub repository
+3. Select the `backend` folder
+4. Configure environment variables
+5. Get your DO URL: `https://your-app-name.ondigitalocean.app`
+
+## 🔄 Update Frontend with Backend URL
+
+After deploying your backend, update Vercel environment variables:
+```
+NEXT_PUBLIC_API_BASE_URL=https://your-actual-backend-url.com
+```
 
 ## 🔧 Environment Setup for Production
 
