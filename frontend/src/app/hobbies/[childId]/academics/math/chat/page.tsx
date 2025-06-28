@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { apiUtils, API_ENDPOINTS } from '@/utils/api';
 
 const YT_API_KEY = "AIzaSyCOM4hcoVvd4I5DVDY6JrOg6z5hWMh8QDc";
 const YT_QUERY = "math for kids";
@@ -51,12 +52,14 @@ export default function MathChatPage() {
     setFilePreview(null);
     setLoading(true);
     try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      // Check if API key is available
+      if (!apiUtils.isGroqApiKeyAvailable()) {
+        throw new Error('API key not configured');
+      }
+
+      const res = await fetch(API_ENDPOINTS.GROQ_CHAT, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_GROQ_API_KEY}`
-        },
+        headers: apiUtils.getGroqHeaders(),
         body: JSON.stringify({
           model: "llama3-8b-8192",
           messages: [
@@ -68,11 +71,18 @@ export default function MathChatPage() {
           temperature: 0.3
         })
       });
+
+      if (!res.ok) {
+        throw new Error(`API request failed with status ${res.status}`);
+      }
+
       const data = await res.json();
       const aiMsg = { role: "assistant", content: data.choices?.[0]?.message?.content || "Sorry, I couldn't solve that. Try rephrasing your question!" };
       setMessages(msgs => [...msgs, aiMsg]);
     } catch (err) {
-      setMessages(msgs => [...msgs, { role: "assistant", content: "Sorry, there was a problem connecting to Edu me AI's math tutor. Please try again." }]);
+      console.error('Math chat error:', err);
+      const errorMessage = apiUtils.handleApiError(err);
+      setMessages(msgs => [...msgs, { role: "assistant", content: errorMessage }]);
     }
     setLoading(false);
   };

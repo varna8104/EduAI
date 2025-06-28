@@ -135,6 +135,77 @@ The backend API will be available at `http://localhost:8000`
 
 The frontend application will be available at `http://localhost:3000`
 
+## 🚀 **Deployment**
+
+### **Frontend Deployment (Vercel)**
+
+1. **Connect to Vercel:**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Select the `frontend` folder as the root directory
+
+2. **Environment Variables:**
+   Add these environment variables in Vercel dashboard:
+   ```
+   NEXT_PUBLIC_GROQ_API_KEY=your_actual_groq_api_key
+   NEXT_PUBLIC_API_BASE_URL=https://your-backend-url.com
+   NODE_ENV=production
+   ```
+
+3. **Build Settings:**
+   - Framework Preset: Next.js
+   - Build Command: `npm run build`
+   - Output Directory: `.next`
+
+### **Backend Deployment Options**
+
+#### **Option 1: Railway**
+1. Connect your GitHub repository to Railway
+2. Set environment variables in Railway dashboard
+3. Use the provided railway.app URL as your backend URL
+
+#### **Option 2: Heroku**
+1. Create a new Heroku app
+2. Set buildpack to Python
+3. Configure environment variables in Heroku settings
+
+#### **Option 3: DigitalOcean App Platform**
+1. Create a new app from GitHub
+2. Configure environment variables
+3. Set up auto-deploy from main branch
+
+### **Environment Variables for Production**
+
+**Backend (.env):**
+```
+SECRET_KEY=your_production_secret_key
+DEBUG=False
+ALLOWED_HOSTS=your-domain.com,your-vercel-app.vercel.app
+DATABASE_URL=your_production_database_url
+CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
+```
+
+**Frontend (.env.local):**
+```
+NEXT_PUBLIC_GROQ_API_KEY=your_groq_api_key
+NEXT_PUBLIC_API_BASE_URL=https://your-backend-url.com
+NODE_ENV=production
+```
+
+## 🛠️ **Troubleshooting**
+
+### **404 NOT_FOUND Error**
+- Ensure environment variables are set correctly in production
+- Check that your backend URL is accessible
+- Verify API endpoints are configured properly
+- Make sure your Groq API key is valid
+
+### **API Connection Issues**
+- Check network connectivity
+- Verify CORS settings in Django
+- Ensure API keys are not expired
+- Check browser console for detailed error messages
+
 ## 🔧 Available Scripts
 
 ### Backend
